@@ -37,10 +37,10 @@ spec:
           image: videoprocessregistrywatermark.azurecr.io/videoprocess-reduce-app:latest
           resources:
             requests:
-              cpu: "1"
+              cpu: "400m"
               memory: 512Mi
             limits:
-              cpu: "2"
+              cpu: "800m"
               memory: 1Gi
 ---
 apiVersion: v1

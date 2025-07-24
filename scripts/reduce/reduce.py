@@ -25,7 +25,8 @@ from azure.identity import DefaultAzureCredential
 from azure.storage.blob import BlobServiceClient
 
 account_url = "https://cloudcomputinga2b022.blob.core.windows.net"
-sas_token  = "sp=racwdl&st=2025-06-21T18:53:56Z&se=2025-06-30T02:53:56Z&sv=2024-11-04&sr=c&sig=J%2BmLtpHBRiFxRU4zIbVfTHLJV%2B1v%2FMVfUkP%2F7ELWgZw%3D"
+# sas_token  = "sp=racwdl&st=2025-06-21T18:53:56Z&se=2025-06-30T02:53:56Z&sv=2024-11-04&sr=c&sig=J%2BmLtpHBRiFxRU4zIbVfTHLJV%2B1v%2FMVfUkP%2F7ELWgZw%3D"
+sas_token  = "sp=racwdli&st=2025-07-23T08:48:37Z&se=2025-09-10T17:03:37Z&sv=2024-11-04&sr=c&sig=%2F3CxIztjOIVlL3%2FNh%2BCpHkueGSeessBMlBExMbRJbjE%3D"
 
 blob_service_client = BlobServiceClient(account_url, credential=sas_token)
 
