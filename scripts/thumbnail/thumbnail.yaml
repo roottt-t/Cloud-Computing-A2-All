@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: thumbnail
+---
+# apiVersion: v1
+# kind: Secret
+# type: kubernetes.io/dockerconfigjson
+# data:
+#   .dockerconfigjson: >-
+#     eyJhdXRocyI6eyJ2aWRlb3Byb2Nlc3NyZWdpc3RyeXdhdGVybWFyay5henVyZWNyLmlvIjp7InVzZXJuYW1lIjoidmlkZW9wcm9jZXNzcmVnaXN0cnl3YXRlcm1hcmsiLCJwYXNzd29yZCI6Im51OVRrY1ZwcGZYQTgxdU56a0UyVG4zZytzbUFmZnQ1SXljditRVlZqRitBQ1JEUEROMVYiLCJhdXRoIjoiZG1sa1pXOXdjbTlqWlhOemNtVm5hWE4wY25sM1lYUmxjbTFoY21zNmJuVTVWR3RqVm5Cd1psaEJPREYxVG5wclJUSlViak5uSzNOdFFXWm1kRFZKZVdOMksxRldWbXBHSzBGRFVrUlFSRTR4Vmc9PSJ9fX0=
+# metadata:
+#   name: demosecret
+#   namespace: default-1750757853349
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videoprocess-thumbnail-app
+  namespace: thumbnail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: videoprocess-thumbnail-app
+  template:
+    metadata:
+      labels:
+        app: videoprocess-thumbnail-app
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      # imagePullSecrets:
+      #   - name: demosecret
+      containers:
+        - name: videoprocess-thumbnail-app
+          image: videoprocessregistrywatermark.azurecr.io/videoprocess-thumbnail-app:latest
+          resources:
+            requests:
+              cpu: "200m"
+              memory: 512Mi
+            limits:
+              cpu: "400m"
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: videoprocess-thumbnail-app-service
+  namespace: thumbnail
+spec:
+  type: LoadBalancer
+  ports:
+    - targetPort: 80
+      name: port80
+      port: 80
+      protocol: TCP
+  selector:
+    app: videoprocess-thumbnail-app

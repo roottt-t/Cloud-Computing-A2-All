@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Video Processing App</title>
+</head>
+<body>
+    <h2>Upload Video and Watermark</h2>
+    <form id="uploadForm">
+        <label>Video File:</label><br>
+        <input type="file" name="video" accept="video/*" required><br><br>
+
+        <!-- <label>Watermark Image:</label><br>
+        <input type="file" name="watermark" accept="image/*" required><br><br>
+
+        <button type="submit">Upload and Submit</button> -->
+    </form>
+
+    <h3>Or Submit Video by URL</h3>
+    <form id="urlForm">
+        <label>Video URL:</label><br>
+        <input type="text" id="videoUrlInput" required>
+        <button type="submit">Submit by URL</button>
+    </form>
+
+    <h3>Check Job Status</h3>
+    <input type="text" id="jobIdInput" placeholder="Enter job_id">
+    <button onclick="checkStatus()">Check Status</button>
+    <p id="statusText"></p>
+
+    <h3>Results</h3>
+    <button onclick="fetchThumbnail()">Get Thumbnail</button>
+    <button onclick="fetchWatermarked()">Get Watermarked Video</button>
+    <div>
+        <img id="thumbnail" width="200" style="display:none;"><br>
+        <a id="videoLink" href="#" target="_blank" style="display:none;">Download Watermarked Video</a>
+    </div>
+
+    <script>
+        const backendBase = "https://videobackend-gpcqbdbpdghwcnad.canadacentral-01.azurewebsites.net/"; // 
+
+        // Form upload
+        document.getElementById('uploadForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const response = await fetch(`${backendBase}/create_video_job`, {
+                method: 'POST',
+                body: formData
+            });
+            const data = await response.json();
+            alert("Job ID: " + data.job_id);
+        });
+
+        // Submit via URL
+        document.getElementById('urlForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const url = document.getElementById('videoUrlInput').value;
+            const response = await fetch(`${backendBase}/create_video_job_by_url`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ video_url: url })
+            });
+            const data = await response.json();
+            alert("Job ID: " + data.job_id);
+        });
+
+        async function checkStatus() {
+            const jobId = document.getElementById('jobIdInput').value;
+            const res = await fetch(`${backendBase}/get_job_status?job_id=${jobId}`);
+            const data = await res.json();
+            document.getElementById('statusText').innerText = `Status: ${data.status}, Completed chunks: ${data.completed_chunks}`;
+        }
+
+        async function fetchThumbnail() {
+            const jobId = document.getElementById('jobIdInput').value;
+            const res = await fetch(`${backendBase}/get_job_thumbnail?job_id=${jobId}`);
+            const data = await res.json();
+            const img = document.getElementById('thumbnail');
+            img.src = data.thumbnail_url;
+            img.style.display = 'block';
+        }
+
+        async function fetchWatermarked() {
+            const jobId = document.getElementById('jobIdInput').value;
+            const res = await fetch(`${backendBase}/get_job_watermar_video?job_id=${jobId}`);
+            const data = await res.json();
+            const link = document.getElementById('videoLink');
+            link.href = data.video_url;
+            link.style.display = 'block';
+            link.innerText = "Download Watermarked Video";
+        }
+    </script>
+</body>
+</html>

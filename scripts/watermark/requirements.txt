@@ -1,0 +1,20 @@
+# Web framework
+flask
+
+# Image processing
+Pillow
+opencv-python-headless
+
+# Azure SDKs
+azure-identity
+azure-storage-blob
+azure-storage-queue
+
+# MySQL connector
+mysql-connector-python
+
+# Logging (optional, included in stdlib)
+# threading, os, uuid, time: all come from stdlib
+
+# Production WSGI server (for Azure App Service)
+gunicorn

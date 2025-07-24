@@ -1,0 +1,16 @@
+
+# Image processing
+Pillow
+opencv-python-headless
+ffmpeg-python
+
+# Azure SDKs
+azure-identity
+azure-storage-blob
+azure-storage-queue
+
+# MySQL connector
+mysql-connector-python
+
+# Logging (optional, included in stdlib)
+# threading, os, uuid, time: all come from stdlib
