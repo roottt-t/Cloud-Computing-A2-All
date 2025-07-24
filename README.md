@@ -20,6 +20,7 @@ tar -xf ffmpeg-release-amd64-static.tar.xz && \
 cp ffmpeg-*/ffmpeg ffmpeg-*/ffprobe /usr/local/bin/ && \
 chmod +x /usr/local/bin/ffmpeg /usr/local/bin/ffprobe && \
 gunicorn app:app --bind=0.0.0.0 --timeout 600`
+
 7. To access the website, go to the URL of the web app.
 8. Add the website domain to the allowed domains of the Azure Blob Storage account to allow users to upload videos.
 
