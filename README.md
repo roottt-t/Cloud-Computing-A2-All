@@ -15,14 +15,51 @@ To deploy the Flask web server, we need to create a new web app in azure portal 
 (notice that secrets are not included in the workflow file, it need to add manually in the repository settings)
 6. Configure the startup command of Azure Web Application.
 
-`wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz && \
+```
+wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-amd64-static.tar.xz && \
 tar -xf ffmpeg-release-amd64-static.tar.xz && \
 cp ffmpeg-*/ffmpeg ffmpeg-*/ffprobe /usr/local/bin/ && \
 chmod +x /usr/local/bin/ffmpeg /usr/local/bin/ffprobe && \
-gunicorn app:app --bind=0.0.0.0 --timeout 600`
+gunicorn app:app --bind=0.0.0.0 --timeout 600
+```
 
 7. To access the website, go to the URL of the web app.
 8. Add the website domain to the allowed domains of the Azure Blob Storage account to allow users to upload videos.
+
+## Storage
+### Database
+
+```
+CREATE TABLE `video_job` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `job_id` varchar(256) DEFAULT NULL,
+  `video_url` varchar(1024) NOT NULL COMMENT 'Original video URL',
+  `watermark_url` varchar(1024) DEFAULT '' COMMENT 'Watermark video URL',
+  `thumbnail_url` varchar(1024) DEFAULT '' COMMENT 'Thumbnail URL',
+  `status` varchar(32) NOT NULL DEFAULT 'created' COMMENT 'Job status',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time',
+  `modify_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last modified time',
+  PRIMARY KEY (`ID`)
+)
+``` 
+
+```
+CREATE TABLE `video_chunk_job` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `job_id` varchar(256) DEFAULT NULL,
+  `video_url` varchar(1024) NOT NULL DEFAULT '' COMMENT 'Original video URL',
+  `total_chunks` int DEFAULT '1' COMMENT 'Total number of chunks',
+  `chunk_id` int DEFAULT NULL COMMENT 'Chunk index',
+  `chunk_url` varchar(1024) DEFAULT NULL COMMENT 'Chunk video URL',
+  `watermark_chunk_url` varchar(1024) DEFAULT NULL COMMENT 'Watermarked chunk URL',
+  `thumbnail_chunk_url` varchar(1024) DEFAULT NULL COMMENT 'Thumbnail chunk URL',
+  `watermark_status` varchar(32) NOT NULL DEFAULT 'created' COMMENT 'Watermark processing status',
+  `thumbnail_status` varchar(32) NOT NULL DEFAULT 'created' COMMENT 'Thumbnail processing status',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation time',
+  `modify_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last modified time',
+  PRIMARY KEY (`ID`)
+)
+```
 
 
 ## Worker Service
