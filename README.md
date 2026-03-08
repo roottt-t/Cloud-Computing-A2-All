@@ -1,7 +1,7 @@
 This is the README file for the application.
 
 
-# Deployment:
+# Deployment
 To deploy this application, follow the steps below:
 
 ## Flask Web Server
